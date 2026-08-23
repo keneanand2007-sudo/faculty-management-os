@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f5f3ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-200: #ddd6fe;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  margin: 0;
+}
+
+input,
+select,
+textarea {
+  color-scheme: light;
+  color: #1e293b;
+}
+
+::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.bg-white.border-slate-100 {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-color: rgba(124, 58, 237, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.bg-white.border-slate-100:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -10px rgba(91, 33, 182, 0.18);
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+@media print {
+  aside, header, .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .md\:ml-64 {
+    margin-left: 0 !important;
+  }
+  body, .bg-slate-50 {
+    background: white !important;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
