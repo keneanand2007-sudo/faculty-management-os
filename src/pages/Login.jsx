@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GraduationCap, Lock, User } from "lucide-react";
+import { GraduationCap, Users, UserCog, ArrowLeft } from "lucide-react";
+import { useFaculty } from "../context/FacultyContext";
+import { useCurrentUser } from "../context/CurrentUserContext";
 
 export default function Login() {
-  const [role, setRole] = useState("hod");
+  const [step, setStep] = useState("role"); // "role" | "pickFaculty"
+  const { faculty } = useFaculty();
+  const { setCurrentFacultyId } = useCurrentUser();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    navigate(role === "hod" ? "/hod" : "/faculty");
+  const handleHOD = () => navigate("/hod");
+
+  const handlePickFaculty = (id) => {
+    setCurrentFacultyId(id);
+    navigate("/faculty");
   };
 
   return (
@@ -24,40 +30,76 @@ export default function Login() {
           </p>
         </div>
 
-        <div className="p-10">
-          <h2 className="text-2xl font-bold text-slate-800">Welcome back</h2>
-          <p className="text-slate-400 text-sm mt-1 mb-6">Login to continue to your dashboard</p>
+        <div className="p-10 flex flex-col justify-center">
+          {step === "role" && (
+            <>
+              <h2 className="text-2xl font-bold text-slate-800">Welcome back</h2>
+              <p className="text-slate-400 text-sm mt-1 mb-8">Select how you'd like to continue</p>
 
-          <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl">
-            {["hod", "faculty"].map((r) => (
+              <div className="space-y-4">
+                <button
+                  onClick={handleHOD}
+                  className="w-full flex items-center gap-4 border-2 border-slate-100 hover:border-brand-400 hover:bg-brand-50/40 rounded-2xl p-5 text-left transition-all group"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                    <UserCog size={22} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-800">Continue as HOD</p>
+                    <p className="text-xs text-slate-400">Full access to faculty, academics and reports</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setStep("pickFaculty")}
+                  className="w-full flex items-center gap-4 border-2 border-slate-100 hover:border-brand-400 hover:bg-brand-50/40 rounded-2xl p-5 text-left transition-all group"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                    <Users size={22} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-800">Continue as Faculty</p>
+                    <p className="text-xs text-slate-400">Access your own classes, subjects and schedule</p>
+                  </div>
+                </button>
+              </div>
+
+              <p className="text-xs text-slate-300 mt-8 text-center">Demo mode — no password required</p>
+            </>
+          )}
+
+          {step === "pickFaculty" && (
+            <>
               <button
-                key={r}
-                onClick={() => setRole(r)}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold capitalize transition-colors ${
-                  role === r ? "bg-white shadow text-brand-600" : "text-slate-500"
-                }`}
+                onClick={() => setStep("role")}
+                className="flex items-center gap-1.5 text-slate-400 hover:text-slate-700 text-sm font-medium mb-4 w-fit"
               >
-                {r === "hod" ? "HOD" : "Faculty"}
+                <ArrowLeft size={15} /> Back
               </button>
-            ))}
-          </div>
+              <h2 className="text-2xl font-bold text-slate-800">Select your profile</h2>
+              <p className="text-slate-400 text-sm mt-1 mb-6">Choose which faculty account to continue as</p>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-2.5 focus-within:border-brand-500">
-              <User size={18} className="text-slate-400" />
-              <input type="text" placeholder="User ID" required className="outline-none text-sm w-full" />
-            </div>
-            <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-3 py-2.5 focus-within:border-brand-500">
-              <Lock size={18} className="text-slate-400" />
-              <input type="password" placeholder="Password" required className="outline-none text-sm w-full" />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl transition-colors"
-            >
-              Login as {role === "hod" ? "HOD" : "Faculty"}
-            </button>
-          </form>
+              <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                {faculty
+                  .filter((f) => f.designation !== "HOD")
+                  .map((f) => (
+                    <button
+                      key={f.id}
+                      onClick={() => handlePickFaculty(f.id)}
+                      className="w-full flex items-center gap-3 border border-slate-100 hover:border-brand-300 hover:bg-brand-50/40 rounded-xl px-4 py-3 text-left transition-all"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-sm font-semibold shrink-0">
+                        {f.photo}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-800">{f.name}</p>
+                        <p className="text-xs text-slate-400">{f.designation}</p>
+                      </div>
+                    </button>
+                  ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

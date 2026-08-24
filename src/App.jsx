@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
 import HODDashboard from "./pages/HODDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import FacultyList from "./pages/FacultyList";
@@ -46,7 +47,7 @@ export default function App() {
                     <CurrentUserProvider>
                       <BrowserRouter>
                         <Routes>
-                          <Route path="/" element={<Navigate to="/hod" replace />} />
+                          <Route path="/" element={<Login />} />
 
                           <Route path="/hod" element={<DashboardLayout role="hod" />}>
                             <Route index element={<HODDashboard />} />

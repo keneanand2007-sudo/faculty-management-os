@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Users, GraduationCap, BookOpen, ClipboardList, CalendarClock, CalendarDays, Trophy, ClipboardCheck, FileClock, FileBarChart, PieChart, LogOut } from "lucide-react";
 
 const hodLinks = [
@@ -27,6 +27,7 @@ const facultyLinks = [
 
 export default function Sidebar({ role = "hod" }) {
   const links = role === "hod" ? hodLinks : facultyLinks;
+  const navigate = useNavigate();
 
   return (
     <aside className="hidden md:flex flex-col w-64 h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300 fixed left-0 top-0 px-4 py-6 border-r border-slate-800/50">
@@ -57,7 +58,10 @@ export default function Sidebar({ role = "hod" }) {
         ))}
       </nav>
 
-      <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/70 hover:text-white transition-colors">
+      <button
+        onClick={() => navigate("/")}
+        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800/70 hover:text-white transition-colors"
+      >
         <LogOut size={18} />
         Logout
       </button>
