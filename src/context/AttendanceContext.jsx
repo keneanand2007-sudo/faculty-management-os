@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { attendanceRecords as initialRecords, studentsList } from "../data/mockData";
+import { attendanceRecords as initialRecords } from "../data/mockData";
 
 const AttendanceContext = createContext();
 const STORAGE_KEY = "fms_attendance_data";
@@ -50,7 +50,7 @@ export function AttendanceProvider({ children }) {
   };
 
   return (
-    <AttendanceContext.Provider value={{ records, students: studentsList, saveAttendance, getRecord, getStudentPercentage }}>
+    <AttendanceContext.Provider value={{ records, saveAttendance, getRecord, getStudentPercentage }}>
       {children}
     </AttendanceContext.Provider>
   );

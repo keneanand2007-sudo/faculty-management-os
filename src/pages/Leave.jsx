@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, Check, X as XIcon, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { useLeaves } from "../context/LeaveContext";
 import { useFaculty } from "../context/FacultyContext";
+import { useToast } from "../context/ToastContext";
 import StatCard from "../components/StatCard";
 import ApplyLeaveModal from "../components/ApplyLeaveModal";
 
@@ -14,6 +15,7 @@ const statusColors = {
 export default function Leave() {
   const { leaves, updateLeaveStatus } = useLeaves();
   const { faculty } = useFaculty();
+  const { showToast } = useToast();
   const [showModal, setShowModal] = useState(false);
   const [remarksInput, setRemarksInput] = useState({});
 
@@ -26,6 +28,7 @@ export default function Leave() {
   const handleDecision = (leave, status) => {
     const remarks = remarksInput[leave.id] ?? leave.hodRemarks;
     updateLeaveStatus(leave.id, status, remarks || "");
+    showToast(`Leave request ${status.toLowerCase()}.`, status === "Approved" ? "success" : "error");
   };
 
   const sorted = [...leaves].sort((a, b) => (a.status === "Pending" ? -1 : 1));

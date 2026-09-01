@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Search, Mail, Phone } from "lucide-react";
+import { Plus, Search, Mail, Phone, Download } from "lucide-react";
 import { useFaculty } from "../context/FacultyContext";
 import AddFacultyModal from "../components/AddFacultyModal";
+
+const statusColors = {
+  Active: "bg-emerald-50 text-emerald-600",
+  "On Leave": "bg-amber-50 text-amber-600",
+  Inactive: "bg-slate-100 text-slate-500",
+};
 
 export default function FacultyList() {
   const { faculty } = useFaculty();
@@ -17,20 +23,43 @@ export default function FacultyList() {
       f.id.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleExport = () => {
+    const headers = ["ID", "Name", "Email", "Phone", "Department", "Designation", "Status", "Workload"];
+    const rows = faculty.map((f) => [f.id, f.name, f.email, f.phone, f.department, f.designation, f.status || "Active", f.workload]);
+    const csv = [headers, ...rows].map((r) => r.map((cell) => `"${cell}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "faculty_list.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Faculty Management</h1>
           <p className="text-slate-400 text-sm">{faculty.length} faculty members</p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
-        >
-          <Plus size={18} />
-          Add Faculty
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-2 bg-white border border-slate-200 hover:border-brand-300 text-slate-600 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+          >
+            <Download size={16} />
+            Export CSV
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+          >
+            <Plus size={18} />
+            Add Faculty
+          </button>
+        </div>
       </div>
 
       <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2.5 w-full max-w-sm">
@@ -51,14 +80,19 @@ export default function FacultyList() {
             onClick={() => navigate(`/hod/faculty/${f.id}`)}
             className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-200 transition-all cursor-pointer"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-semibold">
-                {f.photo}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-semibold">
+                  {f.photo}
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">{f.name}</p>
+                  <p className="text-xs text-slate-400">{f.designation}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-slate-800">{f.name}</p>
-                <p className="text-xs text-slate-400">{f.designation}</p>
-              </div>
+              <span className={`text-[10px] font-medium px-2 py-1 rounded-full whitespace-nowrap ${statusColors[f.status || "Active"]}`}>
+                {f.status || "Active"}
+              </span>
             </div>
 
             <div className="mt-4 space-y-1.5">

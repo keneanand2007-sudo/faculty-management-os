@@ -21,10 +21,11 @@ export default function FacultyDashboard() {
   const mySubjects = subjects.filter((s) => s.facultyId === currentFacultyId);
   const myActivities = activities.filter((a) => a.facultyId === currentFacultyId);
   const pendingTasks = myActivities.filter((a) => a.status !== "Completed").length;
-  const mySubjectIds = mySubjects.map((s) => s.id);
-  const todaySchedule = schedule
-    .filter((s) => s.day === today && mySubjectIds.includes(s.subjectId))
-    .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+  const todayPeriods = schedule
+    .filter((s) => s.day === today && s.type === "class" && s.sessions.some((sess) => sess.facultyId === currentFacultyId))
+    .sort((a, b) => a.period.localeCompare(b.period, undefined, { numeric: true }));
+
   const pendingLeave = leaves.filter((l) => l.facultyId === currentFacultyId && l.status === "Pending").length;
 
   if (!me) return null;
@@ -38,27 +39,27 @@ export default function FacultyDashboard() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard icon={BookOpen} label="My Subjects" value={mySubjects.length} color="indigo" />
-        <StatCard icon={CalendarDays} label="Classes Today" value={todaySchedule.length} color="green" />
+        <StatCard icon={CalendarDays} label="Classes Today" value={todayPeriods.length} color="green" />
         <StatCard icon={ClipboardCheck} label="My Attendance" value={`${me.attendance}%`} color="amber" />
         <StatCard icon={Target} label="Pending Tasks" value={pendingTasks} color="rose" />
       </div>
 
       <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
         <h3 className="font-semibold text-slate-800 mb-4">Today's Timetable ({today})</h3>
-        {todaySchedule.length === 0 ? (
+        {todayPeriods.length === 0 ? (
           <p className="text-slate-400 text-sm py-4 text-center">No classes scheduled for today.</p>
         ) : (
           <div className="space-y-3">
-            {todaySchedule.map((t) => {
-              const subj = mySubjects.find((s) => s.id === t.subjectId);
+            {todayPeriods.map((p) => {
+              const mySession = p.sessions.find((s) => s.facultyId === currentFacultyId);
               return (
-                <div key={t.id} className="flex items-center justify-between py-3 px-4 rounded-xl bg-slate-50">
+                <div key={p.id} className="flex items-center justify-between py-3 px-4 rounded-xl bg-slate-50">
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">{subj?.name}</p>
-                    <p className="text-xs text-slate-400">{subj?.className} • Room {t.room}</p>
+                    <p className="text-sm font-semibold text-slate-800">{mySession.subject}</p>
+                    <p className="text-xs text-slate-400">{mySession.subjectType} • Room 402</p>
                   </div>
                   <span className="text-xs font-medium text-brand-600 bg-brand-50 px-3 py-1.5 rounded-full">
-                    {t.startTime} - {t.endTime}
+                    {p.time}
                   </span>
                 </div>
               );

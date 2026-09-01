@@ -2,12 +2,22 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, Trash2, Pencil } from "lucide-react";
 import { useFaculty } from "../context/FacultyContext";
+import { useToast } from "../context/ToastContext";
+import { useConfirm } from "../context/ConfirmContext";
 import AddFacultyModal from "../components/AddFacultyModal";
+
+const statusColors = {
+  Active: "bg-emerald-50 text-emerald-600",
+  "On Leave": "bg-amber-50 text-amber-600",
+  Inactive: "bg-slate-100 text-slate-500",
+};
 
 export default function FacultyProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { faculty, deleteFaculty } = useFaculty();
+  const { showToast } = useToast();
+  const { confirm } = useConfirm();
   const [showEdit, setShowEdit] = useState(false);
 
   const person = faculty.find((f) => f.id === id);
@@ -23,9 +33,16 @@ export default function FacultyProfile() {
     );
   }
 
-  const handleDelete = () => {
-    if (confirm(`Remove ${person.name} from faculty list?`)) {
+  const handleDelete = async () => {
+    const ok = await confirm({
+      title: "Remove this faculty?",
+      message: `${person.name} will be removed from the faculty list. This action cannot be easily undone.`,
+      confirmText: "Remove",
+      danger: true,
+    });
+    if (ok) {
       deleteFaculty(person.id);
+      showToast(`${person.name} removed.`, "error");
       navigate("/hod/faculty");
     }
   };
@@ -50,9 +67,14 @@ export default function FacultyProfile() {
               <p className="text-slate-400 text-sm">
                 {person.designation} • {person.department}
               </p>
-              <span className="inline-block mt-2 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
-                {person.id}
-              </span>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+                  {person.id}
+                </span>
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusColors[person.status || "Active"]}`}>
+                  {person.status || "Active"}
+                </span>
+              </div>
             </div>
           </div>
 

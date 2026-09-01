@@ -46,6 +46,11 @@ textarea {
   border-color: rgba(124, 58, 237, 0.2);
 }
 
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 @media print {
   aside, header, .no-print {
     display: none !important;

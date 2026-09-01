@@ -2,12 +2,14 @@ import { useMemo } from "react";
 import { useLeaves } from "../context/LeaveContext";
 import { useEvents } from "../context/EventContext";
 import { useAttendance } from "../context/AttendanceContext";
+import { useStudents } from "../context/StudentContext";
 import { useFaculty } from "../context/FacultyContext";
 
 export function useNotifications(role, currentFacultyId) {
   const { leaves } = useLeaves();
   const { events } = useEvents();
-  const { students, getStudentPercentage } = useAttendance();
+  const { getStudentPercentage } = useAttendance();
+  const { students } = useStudents();
   const { faculty } = useFaculty();
 
   return useMemo(() => {

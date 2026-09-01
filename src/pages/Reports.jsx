@@ -3,6 +3,7 @@ import { Users, ClipboardCheck, BarChart3, CalendarDays, Trophy, Printer } from 
 import { useFaculty } from "../context/FacultyContext";
 import { useSubjects } from "../context/SubjectContext";
 import { useAttendance } from "../context/AttendanceContext";
+import { useStudents } from "../context/StudentContext";
 import { useEvents } from "../context/EventContext";
 import { useCompetitions } from "../context/CompetitionContext";
 
@@ -17,8 +18,8 @@ const reportTypes = [
 export default function Reports() {
   const [selected, setSelected] = useState(null);
   const { faculty } = useFaculty();
-  const { subjects } = useSubjects();
-  const { students, getStudentPercentage } = useAttendance();
+  const { getStudentPercentage } = useAttendance();
+  const { students } = useStudents();
   const { events } = useEvents();
   const { competitions } = useCompetitions();
 

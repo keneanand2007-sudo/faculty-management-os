@@ -3,13 +3,13 @@ import { Users, BookOpen, User } from "lucide-react";
 import { classesList } from "../data/mockData";
 import { useSubjects } from "../context/SubjectContext";
 import { useFaculty } from "../context/FacultyContext";
-import { useAttendance } from "../context/AttendanceContext";
+import { useStudents } from "../context/StudentContext";
 
 export default function Classes() {
   const navigate = useNavigate();
   const { subjects } = useSubjects();
   const { faculty } = useFaculty();
-  const { students } = useAttendance();
+  const { students } = useStudents();
 
   return (
     <div className="space-y-6">

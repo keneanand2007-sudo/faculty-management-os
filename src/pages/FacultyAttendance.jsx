@@ -2,18 +2,21 @@ import { useState, useEffect } from "react";
 import { CheckCircle2, XCircle, Save } from "lucide-react";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { useAttendance } from "../context/AttendanceContext";
+import { useStudents } from "../context/StudentContext";
 import { useSubjects } from "../context/SubjectContext";
+import { useToast } from "../context/ToastContext";
 
 export default function FacultyAttendance() {
   const { currentFacultyId } = useCurrentUser();
-  const { students, saveAttendance, getRecord } = useAttendance();
+  const { saveAttendance, getRecord } = useAttendance();
+  const { students } = useStudents();
   const { subjects } = useSubjects();
+  const { showToast } = useToast();
 
   const mySubjects = subjects.filter((s) => s.facultyId === currentFacultyId);
   const [selectedSubject, setSelectedSubject] = useState(mySubjects[0]?.id || "");
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
   const [statusMap, setStatusMap] = useState({});
-  const [saved, setSaved] = useState(false);
 
   const activeSubject = mySubjects.find((s) => s.id === selectedSubject);
   const classStudents = students.filter((s) => s.className === activeSubject?.className);
@@ -27,18 +30,16 @@ export default function FacultyAttendance() {
       map[s.id] = found?.status || "Present";
     });
     setStatusMap(map);
-    setSaved(false);
   }, [selectedSubject, selectedDate]);
 
   const toggleStatus = (studentId) => {
     setStatusMap({ ...statusMap, [studentId]: statusMap[studentId] === "Present" ? "Absent" : "Present" });
-    setSaved(false);
   };
 
   const handleSave = () => {
     const entries = classStudents.map((s) => ({ studentId: s.id, status: statusMap[s.id] || "Present" }));
     saveAttendance(selectedDate, selectedSubject, activeSubject.className, entries);
-    setSaved(true);
+    showToast("Attendance saved successfully.");
   };
 
   if (mySubjects.length === 0) {
@@ -102,6 +103,9 @@ export default function FacultyAttendance() {
               </div>
             );
           })}
+          {classStudents.length === 0 && (
+            <p className="text-slate-400 text-sm py-6 text-center">No students in this class yet.</p>
+          )}
         </div>
 
         <button
@@ -109,7 +113,7 @@ export default function FacultyAttendance() {
           className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl transition-colors mt-5"
         >
           <Save size={16} />
-          {saved ? "Attendance Saved ✓" : "Save Attendance"}
+          Save Attendance
         </button>
       </div>
     </div>

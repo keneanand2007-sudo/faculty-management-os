@@ -31,63 +31,72 @@ import { TimetableProvider } from "./context/TimetableContext";
 import { EventProvider } from "./context/EventContext";
 import { CompetitionProvider } from "./context/CompetitionContext";
 import { AttendanceProvider } from "./context/AttendanceContext";
+import { StudentProvider } from "./context/StudentContext";
 import { LeaveProvider } from "./context/LeaveContext";
 import { CurrentUserProvider } from "./context/CurrentUserContext";
+import { ToastProvider } from "./context/ToastContext";
+import { ConfirmProvider } from "./context/ConfirmContext";
 
 export default function App() {
   return (
-    <FacultyProvider>
-      <SubjectProvider>
-        <ActivityProvider>
-          <TimetableProvider>
-            <EventProvider>
-              <CompetitionProvider>
-                <AttendanceProvider>
-                  <LeaveProvider>
-                    <CurrentUserProvider>
-                      <BrowserRouter>
-                        <Routes>
-                          <Route path="/" element={<Login />} />
+    <ToastProvider>
+      <ConfirmProvider>
+        <FacultyProvider>
+          <SubjectProvider>
+            <ActivityProvider>
+              <TimetableProvider>
+                <EventProvider>
+                  <CompetitionProvider>
+                    <StudentProvider>
+                      <AttendanceProvider>
+                        <LeaveProvider>
+                          <CurrentUserProvider>
+                            <BrowserRouter>
+                              <Routes>
+                                <Route path="/" element={<Login />} />
 
-                          <Route path="/hod" element={<DashboardLayout role="hod" />}>
-                            <Route index element={<HODDashboard />} />
-                            <Route path="faculty" element={<FacultyList />} />
-                            <Route path="faculty/:id" element={<FacultyProfile />} />
-                            <Route path="classes" element={<Classes />} />
-                            <Route path="classes/:id" element={<ClassDetail />} />
-                            <Route path="subjects" element={<Subjects />} />
-                            <Route path="subjects/:id" element={<SubjectDetail />} />
-                            <Route path="activities" element={<Activities />} />
-                            <Route path="timetable" element={<Timetable />} />
-                            <Route path="events" element={<Events />} />
-                            <Route path="events/:id" element={<EventDetail />} />
-                            <Route path="competitions" element={<Competitions />} />
-                            <Route path="competitions/:id" element={<CompetitionDetail />} />
-                            <Route path="attendance" element={<Attendance />} />
-                            <Route path="leave" element={<Leave />} />
-                            <Route path="reports" element={<Reports />} />
-                            <Route path="analytics" element={<Analytics />} />
-                          </Route>
+                                <Route path="/hod" element={<DashboardLayout role="hod" />}>
+                                  <Route index element={<HODDashboard />} />
+                                  <Route path="faculty" element={<FacultyList />} />
+                                  <Route path="faculty/:id" element={<FacultyProfile />} />
+                                  <Route path="classes" element={<Classes />} />
+                                  <Route path="classes/:id" element={<ClassDetail />} />
+                                  <Route path="subjects" element={<Subjects />} />
+                                  <Route path="subjects/:id" element={<SubjectDetail />} />
+                                  <Route path="activities" element={<Activities />} />
+                                  <Route path="timetable" element={<Timetable />} />
+                                  <Route path="events" element={<Events />} />
+                                  <Route path="events/:id" element={<EventDetail />} />
+                                  <Route path="competitions" element={<Competitions />} />
+                                  <Route path="competitions/:id" element={<CompetitionDetail />} />
+                                  <Route path="attendance" element={<Attendance />} />
+                                  <Route path="leave" element={<Leave />} />
+                                  <Route path="reports" element={<Reports />} />
+                                  <Route path="analytics" element={<Analytics />} />
+                                </Route>
 
-                          <Route path="/faculty" element={<DashboardLayout role="faculty" />}>
-                            <Route index element={<FacultyDashboard />} />
-                            <Route path="subjects" element={<FacultySubjects />} />
-                            <Route path="subjects/:id" element={<SubjectDetail />} />
-                            <Route path="activities" element={<FacultyActivities />} />
-                            <Route path="timetable" element={<FacultyTimetable />} />
-                            <Route path="attendance" element={<FacultyAttendance />} />
-                            <Route path="leave" element={<FacultyLeave />} />
-                          </Route>
-                        </Routes>
-                      </BrowserRouter>
-                    </CurrentUserProvider>
-                  </LeaveProvider>
-                </AttendanceProvider>
-              </CompetitionProvider>
-            </EventProvider>
-          </TimetableProvider>
-        </ActivityProvider>
-      </SubjectProvider>
-    </FacultyProvider>
+                                <Route path="/faculty" element={<DashboardLayout role="faculty" />}>
+                                  <Route index element={<FacultyDashboard />} />
+                                  <Route path="subjects" element={<FacultySubjects />} />
+                                  <Route path="subjects/:id" element={<SubjectDetail />} />
+                                  <Route path="activities" element={<FacultyActivities />} />
+                                  <Route path="timetable" element={<FacultyTimetable />} />
+                                  <Route path="attendance" element={<FacultyAttendance />} />
+                                  <Route path="leave" element={<FacultyLeave />} />
+                                </Route>
+                              </Routes>
+                            </BrowserRouter>
+                          </CurrentUserProvider>
+                        </LeaveProvider>
+                      </AttendanceProvider>
+                    </StudentProvider>
+                  </CompetitionProvider>
+                </EventProvider>
+              </TimetableProvider>
+            </ActivityProvider>
+          </SubjectProvider>
+        </FacultyProvider>
+      </ConfirmProvider>
+    </ToastProvider>
   );
 }
